@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import pathlib
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -135,21 +137,44 @@ BOOTSTRAP3 = {
 }
 
 # Heroku settings
-if os.getcwd() == '/app':
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(default='postgres://localhost')
-    }
+#if os.getcwd() == '/app':
+#    import dj_database_url
+#    DATABASES = {
+#        'default': dj_database_url.config(default='postgres://localhost')
+#    }
 
-    # Honor the 'X-Forwarded-Proto' header for request.is_secure().
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#    # Honor the 'X-Forwarded-Proto' header for request.is_secure().
+#    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-    # Allow all host headers.
-    ALLOWED_HOSTS = ['*']
+#    # Allow all host headers.
+#    ALLOWED_HOSTS = ['*']
 
     # Static asset configuration
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = 'staticfiles'
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
+#    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+#    STATIC_ROOT = 'staticfiles'
+#    STATICFILES_DIRS = (
+#        os.path.join(BASE_DIR, 'static'),
+#    )
+
+
+#Render settings
+BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
+
+# Use environment variable for allowed hosts (set to '*' for now)
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+
+# Static files (CSS, JS, images)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Optional: use Whitenoise for static files in production
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Database config from Render-provided DATABASE_URL
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600)
+}
+
+# For HTTPS detection behind Render's proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
