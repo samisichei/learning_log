@@ -2,6 +2,9 @@
 
 A Django web app that allows users to log their learning topics and notes.
 
+# Note
+This project is based on the Learning Log project from Python Crash Course by Eric Matthes. I completed it independently as part of my learning journey.
+
 ## Features
 - Create user accounts
 - Log topics and entries
@@ -13,5 +16,4 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 
-##Note
-This project is based on the Learning Log project from Python Crash Course by Eric Matthes. I completed it independently as part of my learning journey.
+
